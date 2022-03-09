@@ -20,7 +20,7 @@ export const ContactLabel = styled.label`
 
 `
 export const InputName = styled.input`
-  margin-top: 10px;
+  // margin-top: 10px;
   /* margin-bottom: 10px; */
 `
 
