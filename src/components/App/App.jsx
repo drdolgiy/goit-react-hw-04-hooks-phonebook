@@ -6,6 +6,7 @@ import {Container} from '../App/App.styled'
 import { nanoid } from "nanoid";
 
 export default function App() {
+    
     const [contacts, setContacts] = useState(
         () => {
             const items = localStorage.getItem('contacts');
@@ -27,7 +28,7 @@ export default function App() {
         getContact ? alert(`${name} is already in contacts`) : setContacts(state => [contact, ...state]);    
     };
 
-     const filteredContact = () => {
+    const filteredContact = () => {
         const normalizedFilter = filter.toLowerCase();
 
         return contacts.filter(contact =>
