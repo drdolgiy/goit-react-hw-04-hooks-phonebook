@@ -1,94 +1,64 @@
-
-import React, { Component } from 'react';
+import { useState, useEffect } from 'react';
 import Form from '../Form/Form';
 import Filter from '../Filter/Filter';
 import ContactList from '../ContactList/ContactList';
 import {Container} from '../App/App.styled'
 import { nanoid } from "nanoid";
 
+export default function App() {
+    const [contacts, setContacts] = useState(
+        () => {
+            const items = localStorage.getItem('contacts');
+          return  items ? JSON.parse(items) : [];
+        }
+    );  
+    
+    const [filter, setFilter] = useState('');
 
-class App extends Component {
-    state = {
-        contacts: [],
-        filter: ''
+    useEffect(() => {
+        localStorage.setItem("contacts", JSON.stringify(contacts));
+    }, [contacts]);
+
+    const addContact =  ({ name, number }) => {
+        const normalizedName = name.toLowerCase();
+        const contact = { id: nanoid(), name, number };
+        const getContact = contacts.find(contact => contact.name.toLowerCase() === normalizedName);
+
+        getContact ? alert(`${name} is already in contacts`) : setContacts(state => [contact, ...state]);    
     };
 
-    addContact = data => {
-        const findContact = this.state.contacts.find(contact => contact.name.toLowerCase() === data.name.toLowerCase());
-
-        if (findContact) { return alert(`${findContact.name} is already in contacts`); }
-
-        const contact = {
-            id: nanoid(),
-            name: data.name,
-            number: data.number
-        };
-
-        this.setState(prevState => ({
-            contacts: [contact, ...prevState.contacts],
-        }));
-
-    };
-
-    deleteContact = (id) => {
-        this.setState(prevState => ({
-            contacts: [...prevState.contacts.filter((contact) => contact.id !== id)],
-        }));
-    };
-
-    changeFilter = event => {
-        this.setState({ filter: event.currentTarget.value });
-    };
-
-    getFilteredContact = () => {
-        const { filter, contacts } = this.state;
+     const filteredContact = () => {
         const normalizedFilter = filter.toLowerCase();
 
         return contacts.filter(contact =>
-            contact.name.toLowerCase().includes(normalizedFilter));
+             contact.name.toLowerCase().includes(normalizedFilter));    
     };
 
-    componentDidMount() {
-        const contacts = localStorage.getItem('contacts');
-        const parsedContacts = JSON.parse(contacts);
-        
-        if (parsedContacts) {
-            this.setState({ contacts: parsedContacts });
-        }
-    };
+    const changeFilter = event => {
+        setFilter( event.currentTarget.value );
+    }; 
 
-    componentDidUpdate(prevProps, prevState) {
-
-        if (this.state.contacts !== prevState.contacts) {
- 
-            localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-        };
-    };
-
-    render() {
-
-        const { filter, contacts } = this.state;
-        const filteredContacts = this.getFilteredContact();
-        const addContact = this.addContact;
-        const changeFilter = this.changeFilter;
-
-        return (
-            <Container>
-
-                <h1>Phonebook</h1>
-
-                <Form onSubmit={addContact}></Form>
-
-                <Filter value={filter} onChange={changeFilter} />
-
-                <h2>Contacts</h2>
-
-                <ContactList contacts={contacts}
-                    filteredContact={filteredContacts}
-                    deleteContact={this.deleteContact} />
-            </Container>
+    const deleteContact = (id) => {
+        setContacts(contacts => 
+            contacts.filter(contact => contact.id !== id)
         );
-    }
-};
+    };
 
-export default App;
+    return (
+        <Container>
+            <h1>Phonebook</h1>
+
+            <Form onSubmit={addContact}></Form>
+
+            <Filter value={filter} onChange={changeFilter} />
+
+            <h2>Contacts</h2>
+
+            <ContactList
+                filteredContact={filteredContact()}
+                deleteContact={deleteContact}
+            />
+        </Container>
+    );
+    
+};

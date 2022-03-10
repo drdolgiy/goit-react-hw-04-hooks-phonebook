@@ -11,7 +11,6 @@ const ContactList = ({ filteredContact, deleteContact }) => {
                         <DeleteButton type="button"
                             onClick={() => deleteContact(contact.id)}>Delete</DeleteButton>
                     </ListItem>
-
                 )
             })}
         </ul>
@@ -21,6 +20,6 @@ const ContactList = ({ filteredContact, deleteContact }) => {
 ContactList.propTypes = {
     filteredContact: propTypes.array.isRequired,
     deleteContact: propTypes.func.isRequired
-}
+};
 
 export default ContactList;
