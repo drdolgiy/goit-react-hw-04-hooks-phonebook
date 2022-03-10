@@ -6,7 +6,7 @@ import {Container} from '../App/App.styled'
 import { nanoid } from "nanoid";
 
 export default function App() {
-    
+
     const [contacts, setContacts] = useState(
         () => {
             const items = localStorage.getItem('contacts');
@@ -60,6 +60,5 @@ export default function App() {
                 deleteContact={deleteContact}
             />
         </Container>
-    );
-    
+    );    
 };

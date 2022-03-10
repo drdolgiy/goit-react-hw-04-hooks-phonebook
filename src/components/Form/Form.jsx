@@ -27,7 +27,7 @@ export default function Form({onSubmit}) {
         setName('');
         setNumber('');
         return
-        };
+    };
   
     const handleSubmit = e => {       
         e.preventDefault();
